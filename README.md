@@ -41,7 +41,7 @@ Overview of the method. The proposed approach iteratively optimizes the texture 
 ```
 git clone https://github.com/barisgecer/OSTeC --recursive
 cd OSTeC
-conda env create -f environment.yml
+conda env create -f environment.yml -n ostec
 source activate ostec
 ```
 
