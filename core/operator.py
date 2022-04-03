@@ -259,7 +259,7 @@ class Operator:
         landmarks = landmarks[:,::-1]
         landmarks[:,0] = 1 - landmarks[:,0]
         aligned_meshes = aligned_meshes[self.mask]
-
+        #TODO: landmarks to heatmaps
         return imgs, masks, landmarks, aligned_meshes
 
     def get_tmesh(self, im, reconstruction_dict, face_mask):
