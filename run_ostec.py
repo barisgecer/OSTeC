@@ -15,12 +15,14 @@ import cv2
 import sys
 sys.path.append("external/stylegan2")
 sys.path.append("external/deep3dfacerecon")
+sys.path.append("external/loho")
 from core.operator import Operator
 from core.config import get_config
 import numpy as np
 from utils.utils import im_menpo2PIL
 from external.deep3dfacerecon.ostec_api import Deep3dModel
 from external.face_detector.detect_face import Face_Detector
+from external.loho.FaceHairMask.MaskExtractor import MaskExtractor
 
 def main(args):
     source_dir = args.source_dir
@@ -28,6 +30,8 @@ def main(args):
     operator = Operator(args)
     detector = Face_Detector()
     deep3dmodel = Deep3dModel()
+    maskExtractor = MaskExtractor()
+
 
     # while True:
     for ext in ['.png', '.jpg']:
@@ -52,7 +56,9 @@ def main(args):
                     fitting = deep3dmodel.recontruct(im_menpo2PIL(img), lms)
                     img = menpo.image.Image(fitting['input'])
 
-                final_uv, results_dict = operator.run(img, fitting)
+                _, face_mask = maskExtractor.main(img)
+
+                final_uv, results_dict = operator.run(img, fitting, face_mask)
                 mio.export_image(final_uv, save_path.replace(ext,'_uv'+ext))
                 if args.frontalize:
                     mio.export_image(results_dict['frontal'], save_path.replace(ext,'_frontal'+ext))
