@@ -276,6 +276,7 @@ class Operator:
 
         if face_mask is not None:
             im_masked = im_masked * np.repeat(np.expand_dims(np.array(face_mask,np.bool),2),3,2)
+            mask_landmarks *= np.array(face_mask, np.uint8)
 
         im_masked = fill_UV(im_PIL2menpo(im_masked))
         im_masked.pixels = np.concatenate([im_masked.pixels, np.expand_dims(mask_landmarks,0)],0)
