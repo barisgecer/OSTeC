@@ -15,13 +15,13 @@ import cv2
 import sys
 sys.path.append("external/stylegan2")
 sys.path.append("external/deep3dfacerecon")
-sys.path.append("external/loho")
+sys.path.append("external/graphonomy")
 from core.operator import Operator
 from core.config import get_config
 import numpy as np
 from utils.utils import im_menpo2PIL
 from external.face_detector.detect_face import Face_Detector
-from external.loho.FaceHairMask.MaskExtractor import MaskExtractor
+from FaceHairMask.MaskExtractor import MaskExtractor
 
 def main(args):
     source_dir = args.source_dir

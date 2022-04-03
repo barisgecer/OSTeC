@@ -8,7 +8,7 @@ from FaceHairMask.graphonomy_inference import inference
 import numpy as np
 import cv2
 
-def preprocessLOHO(image, size=256, normalize=1):
+def preprocess(image, size=256, normalize=1):
     if size is None:
         image = transforms.Resize((1024, 1024))(image)
     else:
@@ -18,7 +18,7 @@ def preprocessLOHO(image, size=256, normalize=1):
         image = transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])(image)
     return image
 
-def postProcessLOHO(faceMask, hairMask):
+def postProcess(faceMask, hairMask):
     hairMask = hairMask.cpu().permute(1,2,0).detach().numpy()
     faceMask = faceMask.cpu().permute(1,2,0).detach().numpy()
     return faceMask, hairMask
@@ -27,27 +27,27 @@ class MaskExtractor:
     def __init__(self):
         
         #? Hair Face Extractors
-        self.netLOHO = deeplab_xception_transfer.deeplab_xception_transfer_projection_savemem(n_classes=20, hidden_layers=128, source_classes=7)
-        stateDict = torch.load("models/LOHO.pth")
-        self.netLOHO.load_source_model(stateDict)
-        self.netLOHO.to("cuda")
-        self.netLOHO.eval()
+        self.net = deeplab_xception_transfer.deeplab_xception_transfer_projection_savemem(n_classes=20, hidden_layers=128, source_classes=7)
+        stateDict = torch.load("models/Graphonomy/inference.pth")
+        self.net.load_source_model(stateDict)
+        self.net.to("cuda")
+        self.net.eval()
         
 
-    def processInput4LOHO(self, image):
-        preprocessedImage = preprocessLOHO(image, size=256, normalize=1)
+    def processInput4(self, image):
+        preprocessedImage = preprocess(image, size=256, normalize=1)
         preprocessedImage = preprocessedImage.unsqueeze(0).to("cuda")
         return preprocessedImage
     
-    def getMaskLOHO(self, image):
-        preprocessedImage = self.processInput4LOHO(image)
-        _, hairMask, faceMask = inference(net=self.netLOHO, img=preprocessedImage, device="cuda")
-        faceMask, hairMask = postProcessLOHO(faceMask, hairMask)
+    def getMask(self, image):
+        preprocessedImage = self.processInput4(image)
+        _, hairMask, faceMask = inference(net=self.net, img=preprocessedImage, device="cuda")
+        faceMask, hairMask = postProcess(faceMask, hairMask)
         return hairMask, faceMask
         
     def main(self, image):
         image = (image.pixels_with_channels_at_back()[:, :, ::-1] * 255).astype('uint8')
-        hairMask, faceMask = self.getMaskLOHO(Image.fromarray(image))
+        hairMask, faceMask = self.getMask(Image.fromarray(image))
         hairMask = transforms.Resize((Image.fromarray(image).size[1], Image.fromarray(image).size[0]))(Image.fromarray((hairMask[:,:,0]* 255).astype('uint8')))
         faceMask = transforms.Resize((Image.fromarray(image).size[1], Image.fromarray(image).size[0]))(Image.fromarray((faceMask[:,:,0]* 255).astype('uint8')))
 
