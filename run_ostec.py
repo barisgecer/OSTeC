@@ -19,9 +19,11 @@ sys.path.append("external/graphonomy")
 from core.operator import Operator
 from core.config import get_config
 import numpy as np
-from utils.utils import im_menpo2PIL
+from utils.utils import im_menpo2PIL, fix_obj
 from external.face_detector.detect_face import Face_Detector
 from FaceHairMask.MaskExtractor import MaskExtractor
+from menpo.shape import TexturedTriMesh
+import menpo3d.io as m3io
 
 def main(args):
     source_dir = args.source_dir
@@ -51,7 +53,8 @@ def main(args):
                 img = menpo.image.Image(np.transpose(cv2.imread(path)[:,:,::-1],[2,0,1])/255.0)
 
                 if args.ganfit and not os.path.isfile(pkl_path):
-                    raise Exception('Reconstruction from GANfit mode is activated and no GANFit reconstruction pickle file has been found! Either Remove --ganfit flag or Run GANFit first.')
+                    continue
+                    # raise Exception('Reconstruction from GANfit mode is activated and no GANFit reconstruction pickle file has been found! Either Remove --ganfit flag or Run GANFit first.')
 
                 if os.path.isfile(pkl_path): # GANFit mode
                     fitting = mio.import_pickle(pkl_path)
@@ -64,7 +67,11 @@ def main(args):
                 _, face_mask = maskExtractor.main(img)
 
                 final_uv, results_dict = operator.run(img, fitting, face_mask)
-                mio.export_image(final_uv, save_path.replace(ext, '.png'))
+                tmesh = TexturedTriMesh(fitting['vertices'],operator.tcoords.points,final_uv,fitting['trilist'])
+                m3io.export_textured_mesh(tmesh,save_path.replace(ext, '.obj'),texture_extension='.png')
+                fix_obj(save_path.replace(ext, '.obj'))
+                # mio.export_image(final_uv, save_path.replace(ext, '.png'))
+
                 if args.frontalize:
                     mio.export_image(results_dict['frontal'], save_path.replace(ext,'_frontal.png'))
                 if args.pickle:
