@@ -66,8 +66,8 @@ def main(args):
                 _, face_mask = maskExtractor.main(img)
 
                 final_uv, results_dict = operator.run(img, fitting, face_mask)
-                tmesh = TexturedTriMesh(fitting['vertices'][operator.mask], operator.tcoords.points, final_uv, operator.template.trilist)
-                m3io.export_textured_mesh(tmesh, save_path.replace(ext, '.obj'), texture_extension='.png')
+                tmesh = TexturedTriMesh(fitting['vertices'],operator.tcoords.points,final_uv,operator.uv_trilist)
+                m3io.export_textured_mesh(tmesh,save_path.replace(ext, '.obj'),texture_extension='.png')
                 fix_obj(save_path.replace(ext, '.obj'))
                 # mio.export_image(final_uv, save_path.replace(ext, '.png'))
 
