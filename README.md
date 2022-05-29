@@ -12,13 +12,13 @@
  <br/>
 
 <p align="center">
-<img width="12%" src="figures/gifs/im18.gif" style="background-color:white;" />
-<img width="12%" src="figures/gifs/norah.gif" style="background-color:white;" />
-<img width="12%" src="figures/gifs/robin.gif" style="background-color:white;" />
-<img width="12%" src="figures/gifs/teaser2.gif" style="background-color:white;" />
-<img width="12%" src="figures/gifs/teaser3.gif" style="background-color:white;" />
-<img width="12%" src="figures/gifs/teaser4.gif" style="background-color:white;" />
-<img width="12%" src="figures/gifs/teaset5.gif" style="background-color:white;" />
+<img width="12%" src="figures/gifs/im18.gif" style="background-color:white; display: inline;" />
+<img width="12%" src="figures/gifs/norah.gif" style="background-color:white; display: inline;" />
+<img width="12%" src="figures/gifs/robin.gif" style="background-color:white; display: inline;" />
+<img width="12%" src="figures/gifs/teaser2.gif" style="background-color:white; display: inline;" />
+<img width="12%" src="figures/gifs/teaser3.gif" style="background-color:white; display: inline;" />
+<img width="12%" src="figures/gifs/teaser4.gif" style="background-color:white; display: inline;" />
+<img width="12%" src="figures/gifs/teaset5.gif" style="background-color:white; display: inline;" />
 </p>
 <p align="center"><img width="100%" src="figures/teaser.jpg" style="background-color:white;" /></p>
 
